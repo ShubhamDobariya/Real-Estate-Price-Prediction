@@ -1,5 +1,7 @@
 # 🏠 Real Estate Price Prediction
 
+https://realestatepriceprediction-beige.vercel.app/
+
 An end-to-end Machine Learning project that predicts California house prices using advanced regression models.  
 The project includes complete EDA, preprocessing, model comparison, hyperparameter tuning, and deployment using Flask API.
 
