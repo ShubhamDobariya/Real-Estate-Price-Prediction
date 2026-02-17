@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Real Estate Price Prediction</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background: url("{{ url_for('static', filename='images/House.jpg') }}")
+          no-repeat center center fixed;
+        background-size: cover;
+      }
+
+      .overlay {
+        background-color: rgba(0, 0, 0, 0.6);
+        min-height: 100vh;
+        padding-top: 40px;
+      }
+    </style>
+  </head>
+  <body class="bg-light">
+    <div class="container mt-5">
+      <div class="card shadow-lg p-4">
+        <h2 class="text-center mb-4">Real Estate Price Prediction</h2>
+
+        <form id="predictionForm">
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label>Longitude</label>
+              <input
+                type="number"
+                step="any"
+                class="form-control"
+                name="longitude"
+                required
+              />
+            </div>
+
+            <div class="col-md-4 mb-3">
+              <label>Latitude</label>
+              <input
+                type="number"
+                step="any"
+                class="form-control"
+                name="latitude"
+                required
+              />
+            </div>
+
+            <div class="col-md-4 mb-3">
+              <label>Housing Median Age</label>
+              <input
+                type="number"
+                class="form-control"
+                name="housing_median_age"
+                required
+              />
+            </div>
+
+            <div class="col-md-4 mb-3">
+              <label>Total Rooms</label>
+              <input
+                type="number"
+                class="form-control"
+                name="total_rooms"
+                required
+              />
+            </div>
+
+            <div class="col-md-4 mb-3">
+              <label>Total Bedrooms</label>
+              <input
+                type="number"
+                class="form-control"
+                name="total_bedrooms"
+                required
+              />
+            </div>
+
+            <div class="col-md-4 mb-3">
+              <label>Population</label>
+              <input
+                type="number"
+                class="form-control"
+                name="population"
+                required
+              />
+            </div>
+
+            <div class="col-md-4 mb-3">
+              <label>Households</label>
+              <input
+                type="number"
+                class="form-control"
+                name="households"
+                required
+              />
+            </div>
+
+            <div class="col-md-4 mb-3">
+              <label>Median Income</label>
+              <input
+                type="number"
+                step="any"
+                class="form-control"
+                name="median_income"
+                required
+              />
+            </div>
+
+            <div class="col-md-4 mb-3">
+              <label>Ocean Proximity</label>
+              <select class="form-select" name="ocean_proximity" required>
+                <option value="">Select</option>
+                <option>NEAR BAY</option>
+                <option><1H OCEAN</option>
+                <option>INLAND</option>
+                <option>NEAR OCEAN</option>
+                <option>ISLAND</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="text-center">
+            <button type="submit" class="btn btn-primary btn-lg mt-3">
+              Predict Price
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="resultModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Prediction Result</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+
+          <div class="modal-body text-center">
+            <h3 id="predictionResult" class="text-success"></h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      document
+        .getElementById("predictionForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          let formData = new FormData(this);
+          let data = {};
+
+          formData.forEach((value, key) => {
+            data[key] = value;
+          });
+
+          fetch("/predict", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          })
+            .then((response) => response.json())
+            .then((result) => {
+              document.getElementById("predictionResult").innerHTML = `
+                Estimated House Price<br>
+                $ ${result.predicted_price}
+            `;
+
+              let modal = new bootstrap.Modal(
+                document.getElementById("resultModal"),
+              );
+              modal.show();
+            });
+        });
+    </script>
+  </body>
+</html>
