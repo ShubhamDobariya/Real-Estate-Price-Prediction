@@ -100,5 +100,3 @@ The project uses a Scikit-Learn Pipeline with:
 
 Everything is wrapped inside a single pipeline for production readiness.
 
-### API Endpoint:
-
